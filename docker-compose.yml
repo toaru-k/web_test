@@ -1,0 +1,17 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: web_server
+    restart: unless-stopped
+    volumes:
+      - ./my_site:/usr/share/nginx/html:ro
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare_tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - web
